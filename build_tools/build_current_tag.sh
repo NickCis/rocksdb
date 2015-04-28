@@ -1,24 +1,31 @@
-#!/bin/bash
+#!/bin/bash -e
 
 set -e
+
+echo "Building"
 
 make shared_lib
 
 #lastver=`git tag | grep "v" | sed 's/v//' | sort -r --version-sort`
 #rev=`git log --pretty=format:'%h' -n 1`
-pkgver=`git symbolic-ref HEAD | sed -e "s/^refs\/heads\/v//"`
-pkgdir="rocksdb_$pkgver-1"
+ROCKSDB_MAJOR=`egrep "ROCKSDB_MAJOR.[0-9]" include/rocksdb/version.h | cut -d ' ' -f 3`
+ROCKSDB_MINOR=`egrep "ROCKSDB_MINOR.[0-9]" include/rocksdb/version.h | cut -d ' ' -f 3`
+ROCKSDB_PATCH=`egrep "ROCKSDB_PATCH.[0-9]" include/rocksdb/version.h | cut -d ' ' -f 3`
+#pkgver=`git symbolic-ref HEAD | sed -e "s/^refs\/heads\/v//"`-1
+pkgver="$ROCKSDB_MAJOR\.$ROCKSDB_MINOR-$ROCKSDB_PATCH"
+#pkgdir="rocksdb_$pkgver-1"
+pkgdir="rocksdb_$pkgver"
 
 mkdir "$pkgdir"
 mkdir "$pkgdir/usr"
 mkdir "$pkgdir/usr/lib"
 install -d "$pkgdir/usr/include"
 cp -r include/rocksdb "$pkgdir"/usr/include
-install -m755 -D librocksdb.so "$pkgdir"/usr/lib/librocksdb.so
+install -m755 -D librocksdb*.so "$pkgdir"/usr/lib/librocksdb.so
 
 mkdir "$pkgdir/DEBIAN"
 echo "Package: RocksDb" >> "$pkgdir/DEBIAN/control"
-echo "Version: $pkgver-1" >> "$pkgdir/DEBIAN/control"
+echo "Version: $pkgver" >> "$pkgdir/DEBIAN/control"
 echo "Section: base" >> "$pkgdir/DEBIAN/control"
 echo "Priority: optional" >> "$pkgdir/DEBIAN/control"
 echo "Architecture: amd64" >> "$pkgdir/DEBIAN/control"
