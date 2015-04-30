@@ -21,7 +21,7 @@ mkdir "$pkgdir/usr"
 mkdir "$pkgdir/usr/lib"
 install -d "$pkgdir/usr/include"
 cp -r include/rocksdb "$pkgdir"/usr/include
-install -m755 -D librocksdb.so "$pkgdir"/usr/lib/librocksdb.so
+install -m755 -D librocksdb.so* "$pkgdir"/usr/lib/
 
 mkdir "$pkgdir/DEBIAN"
 echo "Package: RocksDb" >> "$pkgdir/DEBIAN/control"
