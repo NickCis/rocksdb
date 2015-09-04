@@ -4,7 +4,7 @@ set -e
 
 echo "Building"
 
-make shared_lib
+make shared_lib static_lib
 
 #lastver=`git tag | grep "v" | sed 's/v//' | sort -r --version-sort`
 #rev=`git log --pretty=format:'%h' -n 1`
@@ -22,6 +22,7 @@ mkdir "$pkgdir/usr/lib"
 install -d "$pkgdir/usr/include"
 cp -r include/rocksdb "$pkgdir"/usr/include
 install -m755 -D librocksdb.so* "$pkgdir"/usr/lib/
+install -m755 -D librocksdb.a* "$pkgdir"/usr/lib/
 
 mkdir "$pkgdir/DEBIAN"
 echo "Package: RocksDb" >> "$pkgdir/DEBIAN/control"

@@ -1,15 +1,30 @@
+sudo: false
 language: cpp
 compiler: gcc
+addons:
+    apt:
+        sources:
+          - ubuntu-toolchain-r-test
+        packages:
+          - gcc-4.9
+          - g++-4.9
+          - zlib1g-dev
+          - libbz2-dev
+          - libsnappy-dev
+          - dpkg-deb
+
 before_install:
-- sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-- sudo apt-get update -qq
-- sudo apt-get install -y -qq gcc-4.9 g++-4.9 zlib1g-dev libbz2-dev libsnappy-dev
-- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
-- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
-- wget https://gflags.googlecode.com/files/libgflags0_2.0-1_amd64.deb
-- sudo dpkg -i libgflags0_2.0-1_amd64.deb
-- wget https://gflags.googlecode.com/files/libgflags-dev_2.0-1_amd64.deb
-- sudo dpkg -i libgflags-dev_2.0-1_amd64.deb
+  - mkdir -p root/bin root/usr/bin root/usr/lib root/usr/include
+  - export PATH=`pwd`/root/bin:`pwd`/root/usr/bin:`pwd`/root/usr/local/bin:$PATH
+  - export LIBRARY_PATH=`pwd`/root/usr/lib:`pwd`/root/usr/local/lib:$LIBRARY_PATH
+  - export CPATH=`pwd`/root/usr/include:`pwd`/root/usr/local/include:$CPATH
+  - install /usr/bin/gcc-4.9 `pwd`/usr/bin
+  - install /usr/bin/g++-4.9 `pwd`/usr/bin
+  - wget https://gflags.googlecode.com/files/libgflags0_2.0-1_amd64.deb
+  - dpkg-deb -x libgflags0_2.0-1_amd64.deb `pwd`/root/
+  - wget https://gflags.googlecode.com/files/libgflags-dev_2.0-1_amd64.deb
+  - dpkg-deb -x libgflags-dev_2.0-1_amd64.deb `pwd`/root/
+
 script: "./build_tools/build_current_tag.sh"
 notifications:
   email: false
