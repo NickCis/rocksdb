@@ -25,11 +25,9 @@ addons:
           - libubsan0-dbg
           - libcilkrts5-dbg
           - libquadmath0-dbg
-          - libmpx0-dbg
           - zlib1g-dev
           - libbz2-dev
           - libsnappy-dev
-          - tree
 
 before_install:
   - mkdir -p root/bin root/usr/bin root/usr/lib root/usr/include
@@ -39,18 +37,13 @@ before_install:
   - ln -s /usr/bin/gcc-5 `pwd`/root/usr/bin/gcc
   - ln -s /usr/bin/g++-5 `pwd`/root/usr/bin/g++
   - export CXX=`pwd`/root/usr/bin/g++
-  - export GCC=`pwd`/root/usr/bin/g++
-  - echo $PATH
-  - export
+  - export CC=`pwd`/root/usr/bin/gcc
+
+install:
   - wget https://gflags.googlecode.com/files/libgflags0_2.0-1_amd64.deb
   - dpkg-deb -x libgflags0_2.0-1_amd64.deb `pwd`/root/
   - wget https://gflags.googlecode.com/files/libgflags-dev_2.0-1_amd64.deb
   - dpkg-deb -x libgflags-dev_2.0-1_amd64.deb `pwd`/root/
-  - gcc --version
-  - g++ --version
-  - ls /usr/bin/gcc*
-  - ls /usr/bin/g++*
-  - tree `pwd`/root
 
 script: "./build_tools/build_current_tag.sh"
 notifications:
