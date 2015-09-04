@@ -11,6 +11,7 @@ addons:
           - zlib1g-dev
           - libbz2-dev
           - libsnappy-dev
+          - tree
 
 before_install:
   - mkdir -p root/bin root/usr/bin root/usr/lib root/usr/include
@@ -25,6 +26,8 @@ before_install:
   - dpkg-deb -x libgflags-dev_2.0-1_amd64.deb `pwd`/root/
   - gcc --version
   - g++ --version
+  - ls /usr/bin/gcc*
+  - ls /usr/bin/g++*
   - tree `pwd`/root
 
 script: "./build_tools/build_current_tag.sh"
